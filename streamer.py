@@ -67,6 +67,11 @@ class StreamerObject(metaclass=ABCMeta):
 class Streamer(StreamerObject):
     def __init__(self, src, scale_factor: float=1.0):
         super().__init__(src, scale_factor)
+        if not self.is_open():
+            raise Exception(
+                "DualStreamer is not open.\n" + \
+                "Please check your video source.\n" + \
+                f"Attempted to use {src}")
         self.init_dims()
         self.current_frame = None
 
@@ -97,6 +102,11 @@ class DualStreamer(StreamerObject):
         """
 
         super().__init__(src, scale_factor)
+        if not self.is_open():
+            raise Exception(
+                "DualStreamer is not open.\n" + \
+                "Please check your video source.\n" + \
+                f"Attempted to use {src}")
         self.direction = direction
         self.init_dims()
         self.current_left_frame = None
