@@ -69,7 +69,7 @@ class Streamer(StreamerObject):
         super().__init__(src, scale_factor)
         if not self.is_open():
             raise Exception(
-                "DualStreamer is not open.\n" + \
+                "Streamer is not open.\n" + \
                 "Please check your video source.\n" + \
                 f"Attempted to use {src}")
         self.init_dims()
