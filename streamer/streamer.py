@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 from abc import ABCMeta, abstractmethod
-from .util.utils import scale_img
+from .util import scale_img
 
 class StreamerObject(metaclass=ABCMeta):
     def __init__(self, src, scale_factor: float=1.0):
