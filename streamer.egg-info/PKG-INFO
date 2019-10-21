@@ -7,8 +7,12 @@ Author: Clayton Mork
 Author-email: mork.clayton3@gmail.com
 License: MIT License
 Description: # streamer
-        A convenient API for accessing OpenCV's VideoCapture
+        A convenient API for streaming and recording with OpenCV
         
+        ## Installation
+        ```console
+        pip install git+https://github.com/cm107/streamer#egg=streamer
+        ```
 Platform: UNKNOWN
 Classifier: Programming Language :: Python :: 3
 Classifier: License :: OSI Approved :: MIT License

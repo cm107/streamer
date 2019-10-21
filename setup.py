@@ -24,7 +24,8 @@ setup(
     ],
     install_requires=[
         'opencv-python>=4.1.1.26',
-        'numpy>=1.17.2'
+        'numpy>=1.17.2',
+        'pylint>=2.4.2'
     ],
     python_requires='>=3.6'
 )
