@@ -15,7 +15,7 @@ setup(
     license='MIT License',
     packages=find_packages(
         where='.',
-        include=['streamer*', 'recorder*']
+        include=['streamer*']
     ),
     classifiers=[
         "Programming Language :: Python :: 3",
