@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='streamer',
-    version='0.1',
+    version='0.2',
     description='OpenCV Video Streaming and Recording API',
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -25,7 +25,9 @@ setup(
     install_requires=[
         'opencv-python>=4.1.1.26',
         'numpy>=1.17.2',
-        'pylint>=2.4.2'
+        'pylint>=2.4.2',
+        'common_utils @ https://github.com/cm107/common_utils/archive/master.zip#egg=common_utils-0.1',
+        'logger @ https://github.com/cm107/logger/archive/master.zip#egg=logger-0.1'
     ],
     python_requires='>=3.6'
 )

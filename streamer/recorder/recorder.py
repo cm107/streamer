@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 class Recorder:
-    def __init__(self, output_path: str, output_dims: list, fps: int):
+    def __init__(self, output_path: str, output_dims: tuple, fps: int):
         fourcc = cv2.VideoWriter_fourcc('M','J','P','G')
         self.output_dims = output_dims
         self.fps = fps
