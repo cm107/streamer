@@ -4,7 +4,7 @@ from abc import ABCMeta, abstractmethod
 from .util import scale_img
 from logger import logger
 from common_utils.check_utils import check_value
-from ...common_utils.utils.utils import get_class_string
+from common_utils.utils import get_class_string
 
 class StreamerObject(metaclass=ABCMeta):
     def __init__(self, src, scale_factor: float=1.0):
