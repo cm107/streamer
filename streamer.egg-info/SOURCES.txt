@@ -10,5 +10,8 @@ streamer/recorder/__init__.py
 streamer/recorder/recorder.py
 streamer/streamer/__init__.py
 streamer/streamer/streamer.py
-streamer/streamer/util/__init__.py
-streamer/streamer/util/utils.py
+streamer/tools/__init__.py
+streamer/tools/video_concat/__init__.py
+streamer/tools/video_concat/video_concat.py
+streamer/util/__init__.py
+streamer/util/utils.py

@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 from abc import ABCMeta, abstractmethod
-from .util import scale_img
+from ..util import scale_img
 from logger import logger
 from common_utils.check_utils import check_value
 from common_utils.utils import get_class_string
