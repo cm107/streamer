@@ -35,16 +35,25 @@ class StreamerObject(metaclass=ABCMeta):
         pass
 
     def get_frame_count(self) -> int:
-        return int(self.worker.get(7))
+        if type(self.src) is str:
+            return int(self.worker.get(7))
+        else:
+            return -1
 
     def is_open(self) -> bool:
         return self.worker.isOpened()
 
     def get_num_frames_read(self) -> int:
-        return int(self.worker.get(1))
+        if type(self.src) is str:
+            return int(self.worker.get(1))
+        else:
+            return -1
 
     def is_playing(self) -> bool:
-        return self.get_num_frames_read() < self.get_frame_count()
+        if type(self.src) is str:
+            return self.get_num_frames_read() < self.get_frame_count()
+        else:
+            return self.is_open()
 
     def get_progress_ratio_string(self) -> str:
         return f"{self.get_num_frames_read()}/{self.get_frame_count()}"
@@ -53,8 +62,11 @@ class StreamerObject(metaclass=ABCMeta):
         return int(self.worker.get(5))
 
     def goto_frame(self, target_frame_num: int) -> bool:
-        success = self.worker.set(1, target_frame_num)
-        return success
+        if type(self.src) is str:
+            success = self.worker.set(1, target_frame_num)
+            return success
+        else:
+            return False
 
     def is_mono(self) -> bool:
         return isinstance(self, Streamer)
@@ -81,9 +93,15 @@ class StreamerObject(metaclass=ABCMeta):
             logger.warning(f'Failed to fastforward to {target_frame}/{total_frames}')
 
     def sample_frame_shape(self) -> list:
-        frame = self.get_frame()
-        self.rewind(1)
-        return frame.shape
+        if type(self.src) is str:
+            frame = self.get_frame()
+            self.rewind(1)
+            return frame.shape
+        elif type(self.src) is int:
+            frame = self.get_frame()
+            return frame.shape
+        else:
+            raise Exception
 
     def assert_open(self):
         if not self.is_open():
