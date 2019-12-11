@@ -11,7 +11,7 @@ Description: # streamer
         
         ## Installation
         ```console
-        pip install git+https://github.com/cm107/streamer#egg=streamer
+        pip install https://github.com/cm107/streamer/archive/python3.6.zip
         ```
 Platform: UNKNOWN
 Classifier: Programming Language :: Python :: 3

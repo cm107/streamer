@@ -26,7 +26,7 @@ setup(
         'opencv-python>=4.1.1.26',
         'numpy>=1.17.2',
         'pylint>=2.4.2',
-        'common_utils @ https://github.com/cm107/common_utils/archive/master.zip#egg=common_utils-0.1',
+        'common_utils @ https://github.com/cm107/common_utils/archive/python3.6.zip#egg=common_utils-0.1',
         'logger @ https://github.com/cm107/logger/archive/master.zip#egg=logger-0.1'
     ],
     python_requires='>=3.6'
