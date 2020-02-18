@@ -1,17 +1,29 @@
+from typing import List
 import cv2
 import numpy as np
 from logger import logger
-from common_utils.check_utils import check_file_exists, check_value
+from common_utils.check_utils import check_type, check_file_exists, check_value
 from common_utils.image_utils import concat_images
 
 from ...streamer import Streamer, DualStreamer, StreamerObject
 from ...recorder import Recorder
 
 class VideoConcatenator:
-    def __init__(self, src0: str, src1: str, output_path: str, stream_mode: str='mono', default_fps: int=25, scale_factor: float=1.0):
+    def __init__(
+        self, src0: str, src1: str, output_path: str,
+        stream_mode: str='mono', default_fps: int=25,
+        src0_scale_factor: float=1.0, src1_scale_factor: float=1.0, output_scale_factor: float=1.0,
+        orientation: int=1
+    ):
+        """
+        orientation
+        0: horizontal
+        1: vertical
+        """
+        
         # Create Streamers
-        self.streamer0 = self.create_streamer(src=src0, mode=stream_mode, verbose=True)
-        self.streamer1 = self.create_streamer(src=src1, mode=stream_mode, verbose=True)
+        self.streamer0 = self.create_streamer(src=src0, mode=stream_mode, scale_factor=src0_scale_factor, verbose=True)
+        self.streamer1 = self.create_streamer(src=src1, mode=stream_mode, scale_factor=src1_scale_factor, verbose=True)
 
         fps0, fps1 = self.streamer0.get_fps(), self.streamer1.get_fps()
         self.fps = fps0 if fps0 == fps1 else default_fps
@@ -22,16 +34,18 @@ class VideoConcatenator:
         # Other Parameters
         self.output_path = output_path
         self.navigation_step = 10
-        self.scale_factor = scale_factor
+        self.src0_scale_factor, self.src1_scale_factor = src0_scale_factor, src1_scale_factor
+        self.output_scale_factor = output_scale_factor
+        self.orientation = orientation
 
-    def create_streamer(self, src: str, mode: str='mono', verbose: bool=False) -> StreamerObject:
+    def create_streamer(self, src: str, mode: str='mono', scale_factor: float=1.0, verbose: bool=False) -> StreamerObject:
         if verbose: logger.info(f"Creating Streamer for src={src}")
         check_value(item=mode, valid_value_list=['mono', 'dual'])
         check_file_exists(src)
         if mode == 'mono':
-            streamer = Streamer(src=src, scale_factor=1.0)
+            streamer = Streamer(src=src, scale_factor=scale_factor)
         elif mode == 'dual':
-            streamer = DualStreamer(src=src, scale_factor=1.0, direction=0)
+            streamer = DualStreamer(src=src, scale_factor=scale_factor, direction=0)
         else:
             raise Exception
         return streamer
@@ -44,7 +58,7 @@ class VideoConcatenator:
             self.recorder = Recorder(output_path=self.output_path, output_dims=(result_w, result_h), fps=self.fps)
         
         self.recorder.write(result)
-        window_h, window_w = int(result_h * self.scale_factor), int(result_w * self.scale_factor)
+        window_h, window_w = int(result_h * self.output_scale_factor), int(result_w * self.output_scale_factor)
         window_name = 'test'
         cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
         cv2.resizeWindow(window_name, (window_w, window_h))
@@ -78,11 +92,14 @@ class VideoConcatenator:
                 logger.warning(f"Frame is None. Terminating...")
                 break
 
-            if frame0.shape != frame1.shape:
-                logger.error(f"frame0.shape == {frame0.shape} != {frame1.shape} == frame1.shape")
+            if self.orientation == 0 and frame0.shape[0] != frame1.shape[0]:
+                logger.error(f"frame0.shape[0] == {frame0.shape[0]} != {frame1.shape[0]} == frame1.shape[0]")
+                raise Exception
+            elif self.orientation == 1 and frame0.shape[1] != frame1.shape[1]:
+                logger.error(f"frame0.shape[1] == {frame0.shape[1]} != {frame1.shape[1]} == frame1.shape[1]")
                 raise Exception
 
-            result = concat_images(imga=frame0, imgb=frame1, orientation=1)
+            result = concat_images(imga=frame0, imgb=frame1, orientation=self.orientation)
 
             break_flag = self.write_and_display_result(result=result)
             if break_flag:
