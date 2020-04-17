@@ -1,11 +1,12 @@
 from setuptools import setup, find_packages
+import streamer
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(
-    name='streamer',
-    version='0.1',
+    name='pyclay-streamer',
+    version=streamer.__version__,
     description='OpenCV Video Streaming and Recording API',
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -26,8 +27,8 @@ setup(
         'opencv-python>=4.1.1.26',
         'numpy>=1.17.2',
         'pylint>=2.4.2',
-        'common_utils @ https://github.com/cm107/common_utils/archive/master.zip#egg=common_utils-0.1',
-        'logger @ https://github.com/cm107/logger/archive/master.zip#egg=logger-0.1'
+        'pyclay-common_utils @ https://github.com/cm107/common_utils/archive/master.zip',
+        'pyclay-logger @ https://github.com/cm107/logger/archive/master.zip'
     ],
     python_requires='>=3.6'
 )

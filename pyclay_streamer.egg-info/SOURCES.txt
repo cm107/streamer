@@ -1,11 +1,11 @@
 README.md
 setup.py
+pyclay_streamer.egg-info/PKG-INFO
+pyclay_streamer.egg-info/SOURCES.txt
+pyclay_streamer.egg-info/dependency_links.txt
+pyclay_streamer.egg-info/requires.txt
+pyclay_streamer.egg-info/top_level.txt
 streamer/__init__.py
-streamer.egg-info/PKG-INFO
-streamer.egg-info/SOURCES.txt
-streamer.egg-info/dependency_links.txt
-streamer.egg-info/requires.txt
-streamer.egg-info/top_level.txt
 streamer/recorder/__init__.py
 streamer/recorder/recorder.py
 streamer/streamer/__init__.py
