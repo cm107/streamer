@@ -1,1 +1,1 @@
-from .streamer import Streamer, DualStreamer, StreamerObject
+from .streamer import Streamer, StreamerList, DualStreamer, StreamerObject

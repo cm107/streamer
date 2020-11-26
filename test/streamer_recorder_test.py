@@ -1,7 +1,7 @@
 import cv2
 from streamer.streamer import Streamer
 from streamer.recorder import Recorder
-from common_utils.cv_drawing_utils import SimpleVideoViewer
+from streamer.cv_viewer import SimpleVideoViewer
 
 # Open Workers
 streamer = Streamer(src='/home/clayton/Downloads/result_0.avi')

@@ -1,10 +1,18 @@
 import cv2
 import numpy as np
+from tqdm import tqdm
+from typing import List, Tuple, cast
+
 from abc import ABCMeta, abstractmethod
 from ..util import scale_img
 from logger import logger
 from common_utils.check_utils import check_value
 from common_utils.utils import get_class_string
+from common_utils.file_utils import file_exists
+from common_utils.image_utils import collage_from_img_buffer
+from common_utils.cv_drawing_utils import draw_text_rows_in_corner
+
+from ..recorder import Recorder
 
 class StreamerObject(metaclass=ABCMeta):
     def __init__(self, src, scale_factor: float=1.0):
@@ -143,6 +151,96 @@ class Streamer(StreamerObject):
 
     def _update_frame_buff(self, frame: np.ndarray):
         self.current_frame = frame if frame is not None else self.current_frame
+
+class StreamerList:
+    def __init__(self, src_list: List[str], scale_factor_list: List[float]=None):
+        for src in src_list:
+            if isinstance(src, int):
+                pass
+            elif isinstance(src, str):
+                assert file_exists(src)
+        if scale_factor_list is not None:
+            assert len(scale_factor_list) == len(src_list)
+        else:
+            scale_factor_list = [1.0]*len(src_list)
+        self.src_list = src_list
+        self.streamer_list = [Streamer(src=src, scale_factor=scale_factor) for src, scale_factor in zip(src_list, scale_factor_list)]
+    
+    def get_frame_count(self) -> int:
+        frame_counts = [streamer.get_frame_count() for streamer in self.streamer_list]
+        return min(frame_counts)
+
+    def get_num_frames_read(self) -> int:
+        num_frames_read_list = [streamer.get_num_frames_read() for streamer in self.streamer_list]
+        assert all([num_frames_read_list[0] == val for val in num_frames_read_list[1:]])
+        return num_frames_read_list[0]
+
+    def is_open(self) -> bool:
+        return all([streamer.is_open() for streamer in self.streamer_list])
+
+    def is_playing(self) -> bool:
+        if all([type(src) is str for src in self.src_list]):
+            return self.get_num_frames_read() < self.get_frame_count()
+        else:
+            return self.is_open()
+
+    def get_frame(self) -> List[np.ndarray]:
+        return [streamer.get_frame() for streamer in self.streamer_list]
+
+    def get_fps(self) -> int:
+        return min([streamer.get_fps() for streamer in self.streamer_list])
+
+    def close(self):
+        for streamer in self.streamer_list:
+            streamer.close()
+
+    def concatenate_streams(
+        self, save_path: str='concat.avi', show_pbar: bool=True, collage_shape: Tuple[int]=None,
+        labels: List[str]=None, label_corner: str='topleft', row_height_prop: float=0.05,
+        label_color: tuple=(255,0,255), fps: int=None
+    ):
+        if labels is not None:
+            assert isinstance(labels, list) and len(labels) == len(self.src_list)
+            labels0 = []
+            for label in labels:
+                if isinstance(label, str):
+                    labels0.append([label])
+                elif isinstance(label, list):
+                    for label_part in label:
+                        assert isinstance(label_part, str)
+                    labels0.append(label)
+        else:
+            labels0 = None
+
+        recorder = cast(Recorder, None)
+        pbar = tqdm(total=self.get_frame_count(), unit='frame(s)') if show_pbar else None
+        while self.is_playing():
+            frame_buffer = self.get_frame()
+            if labels0 is not None:
+                for i in range(len(frame_buffer)):
+                    frame_buffer[i] = draw_text_rows_in_corner(
+                        img=frame_buffer[i],
+                        row_text_list=labels0[i],
+                        row_height=row_height_prop*frame_buffer[i].shape[0],
+                        corner=label_corner,
+                        color=label_color
+                    )
+            frame = collage_from_img_buffer(
+                img_buffer=frame_buffer,
+                collage_shape=collage_shape if collage_shape is not None else (1, len(self.src_list))
+            )
+            if recorder is None:
+                frame_h, frame_w = frame.shape[:2]
+                recorder = Recorder(
+                    output_path=save_path, output_dims=(frame_w, frame_h),
+                    fps=fps if fps is not None else self.get_fps()
+                )
+            recorder.write(frame)
+            if pbar is not None:
+                pbar.update()
+        recorder.close()
+        if pbar is not None:
+            pbar.close()
 
 class DualStreamer(StreamerObject):
     def __init__(self, src, scale_factor: float=1.0, direction: int=0):

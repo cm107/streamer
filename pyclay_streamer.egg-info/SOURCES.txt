@@ -6,6 +6,8 @@ pyclay_streamer.egg-info/dependency_links.txt
 pyclay_streamer.egg-info/requires.txt
 pyclay_streamer.egg-info/top_level.txt
 streamer/__init__.py
+streamer/cv_viewer/__init__.py
+streamer/cv_viewer/cv_viewer.py
 streamer/recorder/__init__.py
 streamer/recorder/recorder.py
 streamer/streamer/__init__.py
