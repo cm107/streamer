@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 from ..streamer.streamer import StreamerObject
 
-def cv_simple_image_viewer(img: np.ndarray, preview_width: int, window_name: str="Simple Image Viewer") -> bool:
+def cv_simple_image_viewer(img: np.ndarray, preview_width: int=1000, window_name: str="Simple Image Viewer") -> bool:
     quit_flag = False
 
     # Window Declaration
