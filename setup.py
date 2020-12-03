@@ -27,8 +27,8 @@ setup(
         'opencv-python>=4.1.1.26',
         'numpy>=1.17.2',
         'pylint>=2.4.2',
-        'pyclay-common_utils>=0.2.4',
-        'pyclay-logger'
+        'pyclay-common_utils @ https://github.com/cm107/common_utils/archive/0.2.4+py36.zip',
+        'pyclay-logger==0.2'
     ],
-    python_requires='>=3.7'
+    python_requires='==3.6.*'
 )
