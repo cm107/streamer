@@ -30,5 +30,5 @@ setup(
         'pyclay-common_utils @ https://github.com/cm107/common_utils/archive/master.zip',
         'pyclay-logger @ https://github.com/cm107/logger/archive/master.zip'
     ],
-    python_requires='>=3.6'
+    python_requires='>=3.7'
 )
