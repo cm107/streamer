@@ -10,6 +10,7 @@ streamer/cv_viewer/__init__.py
 streamer/cv_viewer/cv_viewer.py
 streamer/recorder/__init__.py
 streamer/recorder/recorder.py
+streamer/recorder/stream_writer.py
 streamer/streamer/__init__.py
 streamer/streamer/streamer.py
 streamer/tools/__init__.py
