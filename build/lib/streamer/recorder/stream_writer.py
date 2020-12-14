@@ -53,7 +53,6 @@ class ImageDumpWriter:
 class StreamWriter:
     def __init__(self, show_preview: bool=False, video_save_path: str=None, dump_dir: str=None):
         self.viewer = SimpleVideoViewer(preview_width=1000) if show_preview else None
-        # self.video_save_path = video_save_path
         self.video_writer = VideoWriter(save_path=video_save_path, fps=5) if video_save_path is not None else None
         self.dump_writer = ImageDumpWriter(save_dir=dump_dir, clear=True) if dump_dir is not None else None
     
