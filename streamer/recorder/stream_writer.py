@@ -51,18 +51,20 @@ class ImageDumpWriter:
         cv2.imwrite(dump_path, img)
 
 class StreamWriter:
-    def __init__(self, show_preview: bool=False, video_save_path: str=None, dump_dir: str=None):
+    def __init__(self, show_preview: bool=False, video_save_path: str=None, fps: int=5, dump_dir: str=None):
         self.viewer = SimpleVideoViewer(preview_width=1000) if show_preview else None
-        self.video_writer = VideoWriter(save_path=video_save_path, fps=5) if video_save_path is not None else None
+        self.video_writer = VideoWriter(save_path=video_save_path, fps=fps) if video_save_path is not None else None
         self.dump_writer = ImageDumpWriter(save_dir=dump_dir, clear=True) if dump_dir is not None else None
     
-    def step(self, img: np.ndarray, file_name: str=None):
+    def step(self, img: np.ndarray, file_name: str=None) -> bool:
         if self.video_writer is not None:
             self.video_writer.write(img)
         if self.dump_writer is not None:
             self.dump_writer.write(img=img, file_name=file_name)
         if self.viewer is not None:
-            self.viewer.show(img=img)
+            return self.viewer.show(img=img)
+        else:
+            return False
 
     def close(self):
         if self.video_writer is not None:
